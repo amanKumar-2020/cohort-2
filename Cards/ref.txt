@@ -1,0 +1,126 @@
+Each card includes:
+
+Name & HP
+
+Description
+
+Two Attacks (with icons and power levels)
+
+Hero Type / Category
+
+🦸 Superhero Card Details
+1. Iron Man (95 HP)
+
+Type: Tech Hero
+
+Description: Genius inventor in a high-tech suit of armor. Combines intelligence and firepower.
+
+Attack 1: Repulsor Blast ⚡ — 40
+
+Attack 2: Unibeam 🔥 — 70
+
+
+
+2. Batman (90 HP)
+
+Type: Vigilante
+
+Description: The Dark Knight of Gotham. Master detective and martial artist.
+
+Attack 1: Batarang 🦇 — 30
+
+Attack 2: Stealth Strike 🕶️ — 50
+
+
+
+3. Superman (120 HP)
+
+Type: Kryptonian
+
+Description: Man of Steel with super strength, flight, and laser vision.
+
+Attack 1: Heat Vision 🔥 — 60
+
+Attack 2: Super Punch 💥 — 80
+
+
+
+4. Spider-Man (85 HP)
+
+Type: Mutated Hero
+
+Description: Bitten by a radioactive spider, he uses agility and webbing to fight crime.
+
+Attack 1: Web Shot 🕸️ — 40
+
+Attack 2: Spider Sense ⚡ — 50
+
+
+
+5. Wonder Woman (110 HP)
+
+Type: Amazon Warrior
+
+Description: Demi-goddess with the Lasso of Truth and indestructible bracelets.
+
+Attack 1: Lasso of Truth ✨ — 50
+
+Attack 2: Amazon Fury ⚔️ — 70
+
+
+
+6. Captain America (100 HP)
+
+Type: Super Soldier
+
+Description: Enhanced by the super-soldier serum; fights for justice with his iconic shield.
+
+Attack 1: Shield Throw 🛡️ — 40
+
+Attack 2: Freedom Strike 🇺🇸 — 60
+
+
+
+7. Thor (115 HP)
+
+Type: God of Thunder
+
+Description: Norse god wielding Mjolnir, master of lightning and storms.
+
+Attack 1: Thunder Smash ⚡ — 60
+
+Attack 2: Mjolnir Strike 🔨 — 80
+
+
+
+8. Flash (90 HP)
+
+Type: Speedster
+
+Description: The fastest man alive, manipulates time through the Speed Force.
+
+Attack 1: Lightning Dash ⚡ — 50
+
+Attack 2: Time Shift 🌀 — 70
+
+
+
+9. Black Panther (95 HP)
+
+Type: King of Wakanda
+
+Description: Superhuman senses and agility enhanced by vibranium suit.
+
+Attack 1: Panther Claw 🐾 — 40
+
+Attack 2: Vibranium Strike 💠 — 60
+
+10. Doctor Strange (100 HP)
+
+Type: Mystic Hero
+
+Description: Sorcerer Supreme, master of mystical arts and alternate dimensions.
+
+Attack 1: Mystic Blast ✨ — 50
+
+Attack 2: Time Loop 🌀 — 70
