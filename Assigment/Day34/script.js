@@ -31,10 +31,36 @@
 
 // 14. Sum of all odd numbers from 1 to 30
 // Add only odd numbers. Print final sum.
-let oddNumberSum = 0;
-for (let i = 0; i < 30; i++) {
-  if (i % 2 !== 0) {
-    oddNumberSum += i;
+
+// let oddNumberSum = 0;
+// for (let i = 0; i < 30; i++) {
+//   if (i % 2 !== 0) {
+//     oddNumberSum += i;
+//   }
+// }
+// console.log(`sum of all odd Number is ${oddNumberSum}`);
+
+// --------------XXX------------------XXX------------------------------XXX---------------------
+
+// 15. Keep asking number until user enters an even number
+// Use while loop. Stop only if input is even.
+
+while (true) {
+  number = prompt("Enter your number");
+
+  if (number === null) {
+    console.log("you cancle it..");
+  } else if (number.trim() === "") {
+    console.log("input is blant ");
+  } else if (isNaN(Number(number.trim()))) {
+    console.log("input must be in Number");
+  } else {
+    number = Number(number.trim());
+
+    if (number % 2 === 0) {
+      console.log(`Oh..yes it is even `);
+
+      break;
+    }
   }
 }
-console.log(`sum of all odd Number is ${oddNumberSum}`);
