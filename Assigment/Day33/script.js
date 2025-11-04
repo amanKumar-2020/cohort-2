@@ -40,21 +40,21 @@
 // 11. Allow only 3 attempts to enter correct password
 // If user gets it right early, stop. If not → “Account locked”
 
-let password = "Aman";
-let userPassword;
-let login = false;
+// let password = "Aman";
+// let userPassword;
+// let login = false;
 
-for (let i = 1; i < 4; i++) {
-  userPassword = prompt("Enter your password");
-  if (password === userPassword) {
-    console.log("You login ");
-    login = true;
-    break;
-  } else {
-    console.log("Try Again");
-  }
-}
+// for (let i = 1; i < 4; i++) {
+//   userPassword = prompt("Enter your password");
+//   if (password === userPassword) {
+//     console.log("You login ");
+//     login = true;
+//     break;
+//   } else {
+//     console.log("Try Again");
+//   }
+// }
 
-if (login === false) {
-  console.log("account locked");
-}
+// if (login === false) {
+//   console.log("account locked");
+// }
