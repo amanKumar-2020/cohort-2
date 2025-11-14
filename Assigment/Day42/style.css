@@ -1,0 +1,91 @@
+body {
+  width: 100%;
+  min-height: 100vh;
+}
+
+.taskName {
+  display: flex;
+  width: -moz-fit-content;
+  width: fit-content;
+  margin: 0 auto;
+  align-items: center;
+  background-color: aqua;
+  justify-content: center;
+}
+
+.title {
+  display: flex;
+  width: -moz-fit-content;
+  width: fit-content;
+  margin: 0 auto;
+  align-items: center;
+  background-color: aqua;
+  justify-content: center;
+}
+
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 29px;
+}
+
+.card {
+  width: 250px;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.count {
+  font-size: 3rem;
+  font-weight: 700;
+  background: #f2f2f2;
+  padding: 10px 25px;
+  border-radius: 8px;
+}
+
+.buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  padding: 8px 18px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.decrease {
+  background: #ff4d4d;
+  color: white;
+}
+.decrease:hover {
+  background: #e04444;
+}
+
+.reset {
+  background: #6c757d;
+  color: white;
+}
+.reset:hover {
+  background: #5b6269;
+}
+
+.increase {
+  background: #28a745;
+  color: white;
+}
+.increase:hover {
+  background: #20893a;
+}/*# sourceMappingURL=style.css.map */

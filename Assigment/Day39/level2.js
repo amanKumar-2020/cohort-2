@@ -53,3 +53,7 @@ function displayUser({ name, age }) {
 }
 
 displayUser(user1);
+
+// -----------------------------XXXXXXX----------------------XXXXXX--------------------
+
+// 4. Demonstrate the difference between normalfunction and arrow function when used as objectmethods (the `this` issue).

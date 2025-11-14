@@ -1,0 +1,91 @@
+@mixin center() {
+  display: flex;
+  width: fit-content; // <-- important
+  margin: 0 auto; // center element
+  align-items: center;
+  background-color: aqua;
+  justify-content: center;
+}
+body {
+  width: 100%;
+  min-height: 100vh;
+}
+
+.taskName {
+  @include center();
+}
+.title {
+  @include center();
+}
+.main{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 29px;
+}
+.card {
+  width: 250px;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+ 
+  
+  gap: 20px;
+}
+
+.count {
+  font-size: 3rem;
+  font-weight: 700;
+  background: #f2f2f2;
+  padding: 10px 25px;
+  border-radius: 8px;
+}
+
+.buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  padding: 8px 18px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+// individual colors
+.decrease {
+  background: #ff4d4d;
+  color: white;
+
+  &:hover {
+    background: #e04444;
+  }
+}
+
+.reset {
+  background: #6c757d;
+  color: white;
+
+  &:hover {
+    background: #5b6269;
+  }
+}
+
+.increase {
+  background: #28a745;
+  color: white;
+
+  &:hover {
+    background: #20893a;
+  }
+}
