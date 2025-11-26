@@ -1,0 +1,118 @@
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  box-sizing: border-box;
+}
+html, body {
+  height: 100%;
+  width: 100%;
+}
+@mixin center{
+  display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+main{
+   height: 100%;
+  width: 100%;
+  @include center;
+  padding: 20px 0px;
+  background-color: #333;
+
+  section{
+    height: 100%;
+    width: 32rem;
+    background-color: crimson;
+    border-radius: 5px;
+    
+  } 
+}
+.all-reels{
+  position: relative;
+  height: 100%;
+}
+.reels{
+  width: 100%;
+  height: 100%;
+  position: relative;
+  video{
+    width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 5px
+  }
+}
+
+.reels .bottom {
+  width: 100%;
+  height: 20%;
+ background: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,1));
+ position: absolute;
+ bottom: 0;
+ border-radius: 5px;
+}
+.bottom-up{
+  display: flex;
+  // justify-content: space-around;
+  gap: 25px;
+  margin: 2px 10px;
+  img{
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+  }
+  .profile-name{
+    margin: 18px;
+    color: white;
+  }
+  .Follow-btn{
+    color: white;
+    padding: 0px 12px;
+    margin: 15px;
+    border: 2px solid rgb(255, 255, 255);
+     background: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0));
+     border-radius: 4px;
+  }
+}
+.des{
+  color: white;
+  font-size: 2rem;
+  font-weight: 500;
+  margin: 10px;
+}
+
+.corner{
+  display: flex;
+  flex-direction: column; /* vertical icons */
+  padding: 20px;
+  margin: 120px 0px;
+  font-size: 30px;
+  gap: 30px;
+  color: white;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+
+.corner div {
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;             /* optional */
+  cursor: pointer;          /* pointer on hover */
+}
+
+.corner i {
+ 
+  font-size: 32px;          /* increase only icon size */
+}
+
+.corner h4 {
+  margin-top: 4px;          /* space between icon and number */
+  font-size: 15px;          /* increase number size optionally */
+}
+
