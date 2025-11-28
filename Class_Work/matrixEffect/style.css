@@ -13,14 +13,39 @@ html, body {
 html{
   font-family: system-ui, -apple-system, BlinkMacSystemFont,  sans-serif;
 }
-body{
+main {
+  height: 100%;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-p{
-  color: green;
-  font-size: 2rem;
-  font-weight: 500;
+.box {
+  height: 100%;
+  width: 100%;
+  overflow: hidden; 
+  position: relative;
+  
+}
+
+.box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center bottom; 
+}
+
+.tag{
+  position: absolute;
+  z-index: 2;
+  top: 18rem;
+  bottom: 40px;
+}
+.tag-upper{
+  font-size: 5rem;
+  color: rgb(255, 255, 255);
+}
+.tag-lower{
+  font-size: 5rem;
 }

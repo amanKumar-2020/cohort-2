@@ -1,32 +1,44 @@
-let p = document.querySelector("p");
-let text = p.innerText;
+
+let tag = document.querySelector(".tag");
+let upper = document.querySelector(".tag-upper");
+let lower = document.querySelector(".tag-lower");
+
+let upperText = upper.innerText;
+let lowerText = lower.innerText;
 const alpha = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm";
 
-let interval = null;
 
-p.addEventListener("mouseenter", () => {
-  if (interval) clearInterval(interval);
+function animating(doc,text){
+  doc.addEventListener("mouseenter", () => {
+    if (doc.dataset.animating === "true") return;
+    doc.dataset.animating = "true";
+    let iteration = 0;
+    const step = 0.3;
+    const fps = 40;
 
-  let iteration = 0; 
-  const step = 0.3; 
-  const fps = 40; 
-  interval = setInterval(() => {
-    const str = text
-      .split("")
-      .map((char, idx) =>
-        idx < iteration
-          ? text[idx]
-          : alpha[Math.floor(Math.random() * alpha.length)]
-      )
-      .join("");
+    const interval = setInterval(() => {
+      const str = text
+        .split("")
+        .map((char, idx) => {
+          if (iteration > idx) {
+            return text[idx];
+          }
+          return alpha.split("")[Math.floor(Math.random() * alpha.length)];
+        })
+        .join("");
+      doc.innerText = str;
+      iteration += step;
 
-    p.innerText = str;
+      if (iteration >= text.length) {
+        clearInterval(interval);
+        iteration = 0;
+        doc.innerText = text;
+        doc.dataset.animating = "false";
+      }
+    }, fps);
+  });
 
-    iteration += step;
+}
 
-    if (iteration >= text.length) {
-      clearInterval(interval); 
-      interval = null;
-    }
-  }, fps);
-});
+animating(upper,upperText)
+animating(lower,lowerText)
