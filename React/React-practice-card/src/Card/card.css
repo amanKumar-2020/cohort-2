@@ -1,0 +1,114 @@
+/* Page background */
+.card-wrapper {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #e6d9b7, #2c7be5);
+}
+
+/* Glass card */
+.profile-card {
+  width: 320px;
+  padding: 2rem 1.5rem;
+  border-radius: 24px;
+
+  /* Glass effect */
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+
+  text-align: center;
+  color: #fff;
+}
+
+/* Avatar */
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.6);
+  object-fit: cover;
+  margin-bottom: 0.75rem;
+}
+
+h2 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.subtitle {
+  font-size: 0.85rem;
+  opacity: 0.85;
+  margin-bottom: 1.5rem;
+}
+
+/* Stats */
+.stats {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.2rem;
+}
+
+.stat {
+  flex: 1;
+  padding: 0.7rem;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.stat h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.stat span {
+  font-size: 0.7rem;
+  opacity: 0.8;
+}
+
+/* Social buttons */
+.links {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.2rem;
+}
+
+.link-btn {
+  flex: 1;
+  padding: 0.6rem;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.link-btn:hover {
+  background: rgba(255, 255, 255, 0.28);
+  transform: translateY(-2px);
+}
+
+/* Contact button */
+.contact-btn {
+  width: 100%;
+  padding: 0.8rem;
+  font-size: large;
+  border-radius: 999px;
+  border: none;
+  background: white;
+  color: #2c7be5;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.contact-btn:hover {
+  transform: translateY(-2px);
+}

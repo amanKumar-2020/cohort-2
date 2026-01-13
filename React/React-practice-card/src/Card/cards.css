@@ -1,0 +1,12 @@
+.card-wrapper {
+  min-height: 100vh;
+  padding: 3rem;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+
+  justify-items: center;
+
+  background: linear-gradient(135deg, #e6d9b7, #2c7be5);
+}
