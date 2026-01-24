@@ -1,0 +1,24 @@
+{
+  "name": "day-04",
+  "version": "1.0.0",
+  "description": "notes api",
+  "main": "index.js",
+  "type":"commonjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1" ,
+    "dev": "npx nodemon server.js"
+    
+  },
+  "keywords": [
+    "notes",
+    "API"
+  ],
+  "author": "Aman Kumar",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6"
+  }
+}
