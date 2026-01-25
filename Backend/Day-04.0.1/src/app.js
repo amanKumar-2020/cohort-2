@@ -20,4 +20,11 @@ app.get("/notes",(req,res)=>{
    res.send(notes)
 })
 
+app.delete("/notes/:index",(req,res)=>{
+  console.log(req.params.index);
+  delete notes[req.params.index]
+  console.log("delete successful");
+  
+})
+
 module.exports = app ;
