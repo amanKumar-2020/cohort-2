@@ -9,22 +9,34 @@ app.get("/", (req,res)=>{
 })
 
 app.post("/notes",(req,res)=>{
-  console.log(req.body)
-  res.send("Note successful added")
   notes.push(req.body);
-  console.log(notes);
+  res.status(201).json({
+    message: "note created successful",
+    note: req.body
+  })
   
 })
 
-app.get("/notes",(req,res)=>{
-   res.send(notes)
-})
+app.get("/notes", (req, res) => {
+  res.status(200).json({notes});
+});
 
 app.delete("/notes/:index",(req,res)=>{
   console.log(req.params.index);
   delete notes[req.params.index]
-  console.log("delete successful");
-  
+
+  res.status(204).json({
+    message:"note delete successful",
+  })
+})
+
+
+app.put("/notes/:index",(req,res)=>{
+  console.log(req.params.index);
+  notes[req.params.index] = req.body
+  res.status(200).json({
+    message: "note update successful"
+  })
 })
 
 module.exports = app ;
