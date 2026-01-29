@@ -1,11 +1,11 @@
-const express = require("express")
+const express =  require("express");
 const app = express();
 
 app.get("/",(req,res)=>{
   res.status(200).json({
-    message : "All good our server is working"
+    message: "welcome to our world"
   })
 })
 
 
-module.exports = app ;
+module.exports = app;

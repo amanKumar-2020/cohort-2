@@ -1,15 +1,17 @@
-const app = require("./src/app");
+const app = require("./src/app")
 const mongoose = require("mongoose")
+require("dotenv").config()
 
 function connectToDb(){
-  mongoose.connect(
-    "mongodb+srv://jnvaman7_db_user:AZTPn6DPamLEzrD3@cohort.sg6dshm.mongodb.net/"
-  ).then(()=>{
-    console.log("successful connect to db");
-  })
+
+  mongoose.connect(process.env.DATABASE_URL)
+  .then(() => {
+    console.log("connected to db")
+  });
 }
-connectToDb()
+
+connectToDb();
 
 app.listen(3000,()=>{
-  console.log(`Our server is running on localhost 3000`);
+  console.log(`our server is running on port:3000`);
 })
