@@ -1,4 +1,4 @@
-const mongoose =require("mongoose")
+const mongoose = require("mongoose");
 
 function connectToDb() {
   mongoose.connect(process.env.DATABASE_URL).then(() => {
