@@ -16,7 +16,6 @@ const App = () => {
 
   useEffect(() => {
     axios.get("http://localhost:3000/notes").then((res) => {
-      console.log(res.data.notes);
       const formatted = res.data.notes.map((note) => ({
         id: note._id,
         title: note.title,
@@ -38,9 +37,15 @@ const App = () => {
   };
 
   // 2. Delete Logic
-  const handleDelete = (id) => {
-    const updatedNotes = notes.filter((note) => note.id !== id);
-    setNotes(updatedNotes);
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`http://localhost:3000/notes/${id}`)
+      const updated = notes.filter((note)=>note.id !==id)
+      setNotes(updated)
+    } catch (error) {
+      console.log(error);
+      
+    }
   };
 
   // 3. Edit Logic (Load data into inputs)
