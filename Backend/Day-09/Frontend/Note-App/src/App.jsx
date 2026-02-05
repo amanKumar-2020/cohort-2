@@ -29,11 +29,24 @@ const App = () => {
   const [editingId, setEditingId] = useState(null);
 
   // 1. Submit Logic (Add New)
-  const handleSubmit = () => {
-    if (!title || !desc) return alert("Please fill in both fields");
-    const newNote = { id: Date.now(), title, desc };
-    setNotes([newNote, ...notes]);
-    resetForm();
+  const handleSubmit = async () => {
+    try {
+      if (!title || !desc) return alert("Please fill in both fields");
+      const res = await axios.post("http://localhost:3000/notes",{
+        title : title,
+        description: desc
+      })
+      const saved = res.data.note ;
+      const newNote = {
+        id : saved._id,
+        title : saved.title,
+        desc : saved.description
+      }
+      setNotes([newNote,...notes])
+      resetForm();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // 2. Delete Logic
@@ -44,7 +57,6 @@ const App = () => {
       setNotes(updated)
     } catch (error) {
       console.log(error);
-      
     }
   };
 
