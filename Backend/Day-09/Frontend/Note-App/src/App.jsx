@@ -68,19 +68,31 @@ const App = () => {
   };
 
   // 4. Update Logic (Save changes)
-  const handleUpdate = () => {
-    if (!editingId) return alert("Select a note to update first!");
+  const handleUpdate = async () => {
+    if (!editingId) return alert("Select note first");
 
-    const updatedNotes = notes.map((note) => {
-      if (note.id === editingId) {
-        return { ...note, title, desc }; // Update only the matching note
-      }
-      return note;
-    });
+    try {
+      const res = await axios.put(`http://localhost:3000/notes/${editingId}`, {
+        title: title,
+        description: desc,
+      });
 
-    setNotes(updatedNotes);
-    resetForm();
+      const updated = res.data.note;
+
+      // update UI
+      const updatedNotes = notes.map((note) =>
+        note.id === editingId
+          ? { id: updated._id, title: updated.title, desc: updated.description }
+          : note,
+      );
+
+      setNotes(updatedNotes);
+      resetForm();
+    } catch (error) {
+      console.log(error);
+    }
   };
+
 
   // Helper to clear inputs
   const resetForm = () => {
