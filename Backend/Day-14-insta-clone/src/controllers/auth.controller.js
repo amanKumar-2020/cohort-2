@@ -33,13 +33,47 @@ async function registerController(req, res) {
   res.status(201).json({
     message: "User Registered successfully",
     user:{
-      userModel :user.username,
+      username :user.username,
       email : user.email,
       bio : user.bio,
     }
   });
 }
 
+async function loginController(req,res) {
+  const {username , password , email} = req.body;
+  const user = await userModel.findOne({
+    $or:[
+      {username},
+    {email}
+    ]
+  })
+ if(!user){
+  return res.status(404).json({
+    message: "user not found",
+  });
+ }
+ const hash = crypto.createHash("sha256").update(password).digest("hex");
+ const isPasswordValid = hash == user.password
+ if(!isPasswordValid){
+  return res.status(401).json({
+    message : "password invalid"
+  })
+ }
+ const token = jwt.sign({id : user._id}, process.env.JWT_SECRET,{expiresIn:"1d"});
+ res.cookie("token", token);
+ res.status(200)
+ .json({
+  message : 'user login successful',
+  user:{
+    username : user.username,
+    bio : user.bio,
+    email : user.email,
+    profileImage : user.profileImage
+  }
+ })
+}
 module.exports = {
   registerController,
+  loginController
 };
