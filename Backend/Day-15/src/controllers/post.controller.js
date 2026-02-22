@@ -64,6 +64,13 @@ async function getPostController(req, res) {
       message: "user not authorized",
     });
   }
+  const posts = await postModel.find({
+    user: decoded.id,
+  });
+  res.status(200).json({
+    message: "All post of user",
+    posts,
+  });
 }
 
-module.exports = { createPostController };
+module.exports = { createPostController, getPostController };
