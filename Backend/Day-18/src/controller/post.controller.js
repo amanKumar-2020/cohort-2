@@ -61,4 +61,46 @@ async function getPostController(req,res) {
     
   }
 }
-module.exports = { createPostController, getPostController };
+
+async function getPostDetailsController(req,res){
+  try {
+    const token = req.cookies.token
+    if(!token){
+      return res.status(401).json({
+        message :"token not provided , unauthorized access"
+      })
+    }
+    const userId =req.user.id;
+    const postId = req.params.postId;
+    const post = await postModel.findOne({_id:postId})
+    
+    if(!post){
+      return res.status(404).json({
+        message : "post not found"
+      })
+    }
+    const isValidUser = userId ==post.user;
+    
+    if(!isValidUser){
+      return res.status(403).json({
+        message: "forbidden access",
+      });
+    }
+    res.status(200).json({
+      message :"post fetched",
+      post
+    })
+
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message:"server error"
+    })
+  }
+}
+
+module.exports = {
+  createPostController,
+  getPostController,
+  getPostDetailsController,
+};

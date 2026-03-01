@@ -1,10 +1,9 @@
-const postController = require("../controller/post.controller")
-const express = require("express")
+const postController = require("../controller/post.controller");
+const express = require("express");
 const authMiddleware = require("../middleware/auth.middleware");
-const upload = require("../middleware/upload.middleware.js")
+const upload = require("../middleware/upload.middleware.js");
 
 const postRouter = express.Router();
-
 
 postRouter.post(
   "/",
@@ -12,6 +11,11 @@ postRouter.post(
   upload.single("image"),
   postController.createPostController,
 );
-postRouter.get("/",authMiddleware,postController.getPostController)
+postRouter.get("/", authMiddleware, postController.getPostController);
+postRouter.get(
+  "/details/:postId",
+  authMiddleware,
+  postController.getPostDetailsController,
+);
 
 module.exports = postRouter;
