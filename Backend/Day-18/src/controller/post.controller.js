@@ -39,4 +39,26 @@ async function createPostController(req, res) {
   }
 }
 
-module.exports = { createPostController };
+async function getPostController(req,res) {
+  console.log(req.user.id);
+  
+  try {
+    const post = await postModel.find({user:req.user.id}).populate("user", "username email")
+    if(!post){
+      return res.status(400).json({
+        message: "post not found",
+      });
+    }
+    res.status(200).json({
+      message:"post fetched",
+      post
+    })
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message:"server error"
+    })
+    
+  }
+}
+module.exports = { createPostController, getPostController };

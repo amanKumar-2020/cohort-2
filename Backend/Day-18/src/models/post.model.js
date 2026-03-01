@@ -12,13 +12,13 @@ const postSchema = new mongoose.Schema(
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "users",
+      ref: "user",
       required: [true, "user is required to create post"],
     },
   },
   { timestamps: true }
 );
 
-const postModel = mongoose.model("psot", postSchema);
+const postModel = mongoose.model("post", postSchema);
 
 module.exports = postModel;

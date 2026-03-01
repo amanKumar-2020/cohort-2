@@ -12,5 +12,6 @@ postRouter.post(
   upload.single("image"),
   postController.createPostController,
 );
+postRouter.get("/",authMiddleware,postController.getPostController)
 
 module.exports = postRouter;
