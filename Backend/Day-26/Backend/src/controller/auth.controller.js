@@ -48,7 +48,7 @@ async function registerController(req,res) {
 async function loginController(req,res) {
     const {email , username ,password} = req.body;
 
-    if ((!email || !username) && !password) {
+    if ((!email && !username) || !password) {
       return res.status(400).json({
         message: "All field required",
       });
@@ -58,13 +58,14 @@ async function loginController(req,res) {
             {username},
             {email}
         ]
-    })
+    }).select("+password")
+    
     if(!user){
         return res.status(401).json({
             message:"user not found"
         })
     }
-    const isPasswordValid = bcryptjs.compare(user.password == password);
+    const isPasswordValid = await bcryptjs.compare(password, user.password);
     if(!isPasswordValid){
         return res.status(400).json({
           message: "Invalid credentials",
