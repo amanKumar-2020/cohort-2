@@ -1,7 +1,9 @@
 async function handleError(err,req,res,next) {
-    return res.status(500).json({
-      message: "Error encounter while register",
-    });
+    const response = {
+        message: err.message
+    }
+
+    res.status(err.status).json(response)
 }
 
 export default handleError;
