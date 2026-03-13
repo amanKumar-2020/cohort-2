@@ -20,8 +20,8 @@ export const registerUserValidator = [
   body("password")
     .notEmpty()
     .withMessage("password is required")
-    .isLength({ min: 6 })
-    .withMessage("password must be at least 6 characters long"),
+    .isLength({ min: 4 })
+    .withMessage("password must be at least 4 characters long"),
   validateRequest,
 ];
 
