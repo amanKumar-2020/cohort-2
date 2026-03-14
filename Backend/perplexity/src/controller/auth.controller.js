@@ -96,3 +96,33 @@ export async function verifyEmail(req, res, next) {
     next(error);
   }
 }
+
+export async function loginUser(req,res,next) {
+  try {
+    const {email ,username , password} = req.body;
+    const user = await userModel
+      .findOne({
+        $or: [{ email }, { username }],
+      })
+
+    if (!user) {
+      const error = new Error("User not Exists");
+      error.statusCode = 401;
+      return next(error);
+    }
+    if (!user.verified) {
+      const error = new Error("user is not verified");
+      error.statusCode = 403;
+      return next(error);
+    }
+    const isPasswordValid = await user.comparePassword(password)
+   if(!isPasswordValid){
+    const error = new Error("password is wrong")
+    error.statusCode(400)
+    return next(error)
+   }
+    
+  } catch (error) {
+     next(error);
+  }
+}
