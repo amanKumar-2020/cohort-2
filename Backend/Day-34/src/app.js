@@ -1,6 +1,8 @@
 import "dotenv/config";
 import express from "express";
 import { ChatMistralAI } from "@langchain/mistralai";
+import * as readline from "node:readline/promises";
+import { stdin as input, stdout as output } from "node:process";
 
 const app = express();
 
@@ -10,11 +12,23 @@ const model = new ChatMistralAI({
   maxRetries: 2,
 });
 
-// await model.invoke("Hello,");
-async function testAi() {
-  model.invoke("What is love explain under 10 words?").then((response) => {
-    console.log(response.text);
+async function testAi(userInput) {
+  model.invoke(userInput).then((response) => {
+    console.log("[AI]" + response.text);
   });
 }
-testAi()
+
+const rl = readline.createInterface({ input, output });
+
+while (true) {
+  const prompt = await rl.question("$ ");
+
+  if (prompt == "q") {
+    rl.close();
+    break;
+  }
+
+  testAi(prompt);
+}
+
 export default app;
