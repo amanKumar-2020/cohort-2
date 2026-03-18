@@ -22,7 +22,7 @@ export async function registerUser(req, res, next) {
       { expiresIn: "10m" },
     );
 
-   await sendEmail(
+    await sendEmail(
       user.email,
       "Email Verification",
       `Please verify your email by clicking the following link: ${process.env.FRONTEND_URL}/api/auth/verify-email?token=${emailVerificationToken}`,
@@ -76,13 +76,12 @@ export async function verifyEmail(req, res, next) {
     user.verified = true;
     await user.save();
 
-       const html = `
+    const html = `
         <h1>Email Verified Successfully!</h1>
         <p>Your email has been verified. You can now log in to your account.</p>
         <a href= "${process.env.FRONTEND_URL}/api/auth/login">Go to Login</a>
     `;
-   return res.send(html);
-
+    return res.send(html);
   } catch (error) {
     if (error.name === "TokenExpiredError") {
       error.status = 400;
@@ -97,13 +96,12 @@ export async function verifyEmail(req, res, next) {
   }
 }
 
-export async function loginUser(req,res,next) {
+export async function loginUser(req, res, next) {
   try {
-    const {email ,username , password} = req.body;
-    const user = await userModel
-      .findOne({
-        $or: [{ email }, { username }],
-      })
+    const { email, username, password } = req.body;
+    const user = await userModel.findOne({
+      $or: [{ email }, { username }],
+    });
 
     if (!user) {
       const error = new Error("User not Exists");
@@ -115,14 +113,27 @@ export async function loginUser(req,res,next) {
       error.statusCode = 403;
       return next(error);
     }
-    const isPasswordValid = await user.comparePassword(password)
-   if(!isPasswordValid){
-    const error = new Error("password is wrong")
-    error.statusCode(400)
-    return next(error)
-   }
-    
+    const isPasswordValid = await user.comparePassword(password);
+    if (!isPasswordValid) {
+      const error = new Error("password is wrong");
+      error.statusCode(400);
+      return next(error);
+    }
+    const token = jwt.sign(
+      { user: user._id, username: user.username },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" },
+    );
+    res.cookie("token", token);
+    res.status(200).json({
+      message:"user login successful",
+      user:{
+        username:user.username,
+        email:user.email
+      }
+    })
+
   } catch (error) {
-     next(error);
+    next(error);
   }
 }
