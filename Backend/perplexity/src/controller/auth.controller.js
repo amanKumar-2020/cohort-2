@@ -116,7 +116,7 @@ export async function loginUser(req, res, next) {
     const isPasswordValid = await user.comparePassword(password);
     if (!isPasswordValid) {
       const error = new Error("password is wrong");
-      error.statusCode(400);
+      error.statusCode = 400;
       return next(error);
     }
     const token = jwt.sign(
@@ -124,16 +124,35 @@ export async function loginUser(req, res, next) {
       process.env.JWT_SECRET,
       { expiresIn: "7d" },
     );
-    res.cookie("token", token);
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: false, // true in production (HTTPS)
+    });
     res.status(200).json({
-      message:"user login successful",
-      user:{
-        username:user.username,
-        email:user.email
-      }
-    })
-
+      message: "user login successful",
+      user: {
+        username: user.username,
+        email: user.email,
+      },
+    });
   } catch (error) {
     next(error);
   }
+}
+
+export async function getMe(req, res, next) {
+  const userId = req.user.user;
+  const user = await userModel.findById(userId);
+  if (!user) {
+    return res.status(401).json({
+      message: "user not found",
+      success: false,
+      err: "user not found",
+    });
+  }
+  res.status(200).json({
+    message: "User details fetched successful",
+    success: true,
+    user,
+  });
 }
