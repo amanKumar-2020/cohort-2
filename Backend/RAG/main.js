@@ -1,11 +1,15 @@
-import "dotenv/config"
+import "dotenv/config";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { MistralAIEmbeddings } from "@langchain/mistralai";
+import { Pinecone } from "@pinecone-database/pinecone";
 
 const embeddings = new MistralAIEmbeddings({
   model: "mistral-embed",
 });
 
+const pineconeClient = new Pinecone({
+  apiKey: process.env.PINECONE_API_KEY,
+});
 
 import { PDFExtract } from "pdf.js-extract";
 
@@ -27,12 +31,13 @@ function extractPDF(filePath) {
 
 extractPDF("story.pdf")
   .then((text) => {
-    console.log(text);
     textSplitter(text);
   })
   .catch((err) => {
     console.error(err);
   });
+
+const pineconeIndex = pineconeClient.index("cohort-2-rag");
 
 async function textSplitter(rawText) {
   const splitter = new RecursiveCharacterTextSplitter({
@@ -40,11 +45,24 @@ async function textSplitter(rawText) {
     chunkOverlap: 50,
   });
   const chunks = await splitter.splitText(rawText);
-  console.log(chunks);
-  const embeddingVectors = await embeddings.embedDocuments(chunks);
-  console.log(embeddingVectors);
+
+  const embeddingVectors = await Promise.all(
+    chunks.map(async (chunk) => {
+      const embedding = await embeddings.embedDocuments(chunk);
+      return {
+        text: chunk,
+        embedding,
+      };
+    }),
+  );
+
+  await pineconeIndex.upsert({
+    records: embeddingVectors.map((doc, i) => ({
+      id: `doc-${i}`,
+      values: doc.embedding,
+      metadata: {
+        text: doc.text,
+      },
+    })),
+  });
 }
-
-
-
-
