@@ -1,9 +1,8 @@
+import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 
 import { PDFExtract } from "pdf.js-extract";
 
 const pdfExtract = new PDFExtract();
-
-
 
 function extractPDF(filePath) {
   return new Promise((resolve, reject) => {
@@ -22,7 +21,19 @@ function extractPDF(filePath) {
 extractPDF("story.pdf")
   .then((text) => {
     console.log(text);
+    textSplitter(text)
   })
   .catch((err) => {
     console.error(err);
   });
+
+
+
+async function textSplitter(rawText) {
+  const splitter = new RecursiveCharacterTextSplitter({
+    chunkSize: 400,
+    chunkOverlap: 50,
+  });
+  const chunks = await splitter.splitText(rawText); 
+  console.log(chunks);
+}

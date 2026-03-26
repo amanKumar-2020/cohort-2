@@ -6,13 +6,16 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node main.js",
+    "dev": "npx nodemon main.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@langchain/core": "^1.1.36",
     "@langchain/mistralai": "^1.0.7",
+    "@langchain/textsplitters": "^1.0.1",
     "express": "^5.2.1",
     "pdf.js-extract": "^0.2.1"
   }
