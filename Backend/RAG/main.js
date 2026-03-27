@@ -2,114 +2,213 @@ import "dotenv/config";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { MistralAIEmbeddings, MistralAI } from "@langchain/mistralai";
 import { Pinecone } from "@pinecone-database/pinecone";
-
-const embeddings = new MistralAIEmbeddings({
-  model: "mistral-embed",
-});
-
-const pineconeClient = new Pinecone({
-  apiKey: process.env.PINECONE_API_KEY,
-});
-
 import { PDFExtract } from "pdf.js-extract";
 
+function getPositiveInteger(value, fallback) {
+  const parsed = Number.parseInt(value ?? "", 10);
+  return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback;
+}
 
-const pdfExtract = new PDFExtract();
+const DEFAULTS = {
+  pineconeIndexName: process.env.PINECONE_INDEX_NAME || "cohort-2-rag",
+  embeddingModel: process.env.MISTRAL_EMBEDDING_MODEL || "mistral-embed",
+  llmModel: process.env.MISTRAL_CHAT_MODEL || "mistral-small-latest",
+  chunkSize: getPositiveInteger(process.env.CHUNK_SIZE, 400),
+  chunkOverlap: getPositiveInteger(process.env.CHUNK_OVERLAP, 50),
+  topK: getPositiveInteger(process.env.TOP_K, 2),
+  fallbackQuestion:
+    process.env.DEFAULT_QUESTION || "how was aarav internship?",
+};
 
-// function extractPDF(filePath) {
-//   return new Promise((resolve, reject) => {
-//     pdfExtract.extract(filePath, {}, (err, data) => {
-//       if (err) return reject(err);
+function getRequiredEnv(name) {
+  const value = process.env[name];
+  if (!value) {
+    throw new Error(`Missing required environment variable: ${name}`);
+  }
+  return value;
+}
 
-//       const text = data.pages
-//         .map((page) => page.content.map((item) => item.str).join(" "))
-//         .join("\n\n");
+function createClients() {
+  const pineconeApiKey = getRequiredEnv("PINECONE_API_KEY");
+  getRequiredEnv("MISTRAL_API_KEY");
 
-//       resolve(text);
-//     });
-//   });
-// }
+  const embeddings = new MistralAIEmbeddings({
+    model: DEFAULTS.embeddingModel,
+  });
 
-// extractPDF("story.pdf")
-//   .then((text) => {
-//     textSplitter(text);
-//   })
-//   .catch((err) => {
-//     console.error(err);
-//   });
+  const llm = new MistralAI({
+    model: DEFAULTS.llmModel,
+    temperature: 0,
+    maxRetries: 2,
+  });
 
-const pineconeIndex = pineconeClient.index("cohort-2-rag");
+  const pineconeClient = new Pinecone({
+    apiKey: pineconeApiKey,
+  });
 
-// async function textSplitter(rawText) {
-//   const splitter = new RecursiveCharacterTextSplitter({
-//     chunkSize: 400,
-//     chunkOverlap: 50,
-//   });
-//   const chunks = await splitter.splitText(rawText);
+  const pineconeIndex = pineconeClient.index(DEFAULTS.pineconeIndexName);
+  const pdfExtract = new PDFExtract();
 
-//   const embeddingVectors = await Promise.all(
-//     chunks.map(async (chunk) => {
-//       const embedding = await embeddings.embedQuery(chunk);
-//       return {
-//         text: chunk,
-//         embedding,
-//       };
-//     }),
-//   );
+  return { embeddings, llm, pineconeIndex, pdfExtract };
+}
 
-//   await pineconeIndex.upsert({
-//     records: embeddingVectors.map((doc, i) => ({
-//       id: `doc-${i}`,
-//       values: doc.embedding,
-//       metadata: {
-//         text: doc.text,
-//       },
-//     })),
-//   });
-// }
+function extractPdfText(pdfExtract, filePath) {
+  return new Promise((resolve, reject) => {
+    pdfExtract.extract(filePath, {}, (error, data) => {
+      if (error) {
+        reject(error);
+        return;
+      }
 
-const llm = new MistralAI({
-  model: "mistral-small-latest",
-  temperature: 0,
-  maxTokens: undefined,
-  maxRetries: 2,
-});
+      const text = (data.pages || [])
+        .map((page) => (page.content || []).map((item) => item.str).join(" "))
+        .join("\n\n")
+        .trim();
 
+      if (!text) {
+        reject(new Error(`No text found in PDF: ${filePath}`));
+        return;
+      }
 
-const inputText = "give me summery of Aarav story?";
+      resolve(text);
+    });
+  });
+}
 
-const queryEmbedding =await embeddings.embedQuery(inputText)
+async function chunkAndEmbed(rawText, embeddings) {
+  const splitter = new RecursiveCharacterTextSplitter({
+    chunkSize: DEFAULTS.chunkSize,
+    chunkOverlap: DEFAULTS.chunkOverlap,
+  });
 
+  const chunks = await splitter.splitText(rawText);
+  if (chunks.length === 0) {
+    return [];
+  }
 
+  const records = await Promise.all(
+    chunks.map(async (text, index) => {
+      const values = await embeddings.embedQuery(text);
+      return {
+        id: `doc-${Date.now()}-${index}`,
+        values,
+        metadata: {
+          text,
+          chunkNumber: index,
+          createdAt: new Date().toISOString(),
+        },
+      };
+    }),
+  );
 
-const finalResult = await pineconeIndex.query({
-  vector: queryEmbedding,
-  topK: 2,
-  includeMetadata: true,
-});
-const data = finalResult.matches.map((content)=>{
-  return content.metadata
-})
+  return records;
+}
 
+async function ingestPdf(filePath, clients) {
+  const rawText = await extractPdfText(clients.pdfExtract, filePath);
+  const records = await chunkAndEmbed(rawText, clients.embeddings);
 
-const finalText = data.map((i)=>{
-  return i.text
-})
+  if (records.length === 0) {
+    throw new Error("No chunks were generated from the document.");
+  }
 
-const contextString = finalText.join("\n\n");
+  await clients.pineconeIndex.upsert({ records });
+  console.log(
+    `Ingestion complete. Upserted ${records.length} chunks from ${filePath}.`,
+  );
+}
 
-const prompt = `
+async function queryContext(question, clients) {
+  const queryVector = await clients.embeddings.embedQuery(question);
+  const result = await clients.pineconeIndex.query({
+    vector: queryVector,
+    topK: DEFAULTS.topK,
+    includeMetadata: true,
+  });
+
+  const contextParts = (result.matches || [])
+    .map((match) => match.metadata?.text)
+    .filter((text) => typeof text === "string" && text.trim().length > 0);
+
+  return contextParts;
+}
+
+function buildPrompt(contextText, question) {
+  return `
 You are a helpful assistant.
 Answer ONLY from the given context.
 If the answer is not in the context, say "I don't know".
 
 Context:
-${contextString}
+${contextText}
 
 Question:
-${inputText}
+${question}
 `;
-const response = await llm.invoke(prompt);
+}
 
-console.log(response);
+async function answerQuestion(question, clients) {
+  const contextParts = await queryContext(question, clients);
+  if (contextParts.length === 0) {
+    console.log("I don't know");
+    return;
+  }
 
+  const prompt = buildPrompt(contextParts.join("\n\n"), question);
+  const response = await clients.llm.invoke(prompt);
+
+  const output =
+    typeof response?.content === "string" ? response.content : String(response);
+  console.log(output);
+}
+
+function printHelp() {
+  console.log(`
+Usage:
+  node main.js ask "<question>"
+  node main.js ingest <pdf-file-path>
+
+Defaults:
+  If no command is passed, the app runs "ask" with a fallback question.
+`);
+}
+
+async function main() {
+  const clients = createClients();
+  const [command, ...rest] = process.argv.slice(2);
+
+  if (!command) {
+    await answerQuestion(DEFAULTS.fallbackQuestion, clients);
+    return;
+  }
+
+  if (command === "ask") {
+    const question = rest.join(" ").trim() || DEFAULTS.fallbackQuestion;
+    await answerQuestion(question, clients);
+    return;
+  }
+
+  if (command === "ingest") {
+    const filePath = rest[0];
+    if (!filePath) {
+      throw new Error(
+        "Please provide a PDF file path. Example: node main.js ingest story.pdf",
+      );
+    }
+
+    await ingestPdf(filePath, clients);
+    return;
+  }
+
+  if (command === "help" || command === "--help" || command === "-h") {
+    printHelp();
+    return;
+  }
+
+  throw new Error(`Unknown command: ${command}`);
+}
+
+main().catch((error) => {
+  console.error("Application error:", error.message || error);
+  process.exitCode = 1;
+});
