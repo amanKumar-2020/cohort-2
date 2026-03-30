@@ -1,0 +1,24 @@
+{
+  "name": "todo-typescript",
+  "version": "1.0.0",
+  "description": "Create a Todo system with full type safety",
+  "keywords": [
+    "todo",
+    "type-safety"
+  ],
+  "homepage": "https://github.com/amanKumar-2020/cohort-2#readme",
+  "bugs": {
+    "url": "https://github.com/amanKumar-2020/cohort-2/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amanKumar-2020/cohort-2.git"
+  },
+  "license": "ISC",
+  "author": "Aman kumar",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
