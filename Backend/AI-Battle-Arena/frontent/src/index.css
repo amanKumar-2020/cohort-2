@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+@theme {
+  --font-headline: "Space Grotesk", sans-serif;
+  --font-body: "Inter", sans-serif;
+  
+  --color-primary: #96f8ff;
+  --color-secondary: #ff51fa;
+  --color-tertiary: #bf81ff;
+  --color-surface: #0e0e13;
+  
+  @keyframes scan {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(800%); }
+  }
+}
+
+.animate-scan {
+  animation: scan 5s infinite linear;
+}
+
+@layer base {
+  body {
+    @apply bg-surface text-[#f9f5fd];
+  }
+}
+
+.cyber-grid {
+  background-image: linear-gradient(#96f8ff05 1px, transparent 1px), linear-gradient(90deg, #96f8ff05 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.glass-panel {
+  background: rgba(37, 37, 45, 0.4);
+  backdrop-filter: blur(12px);
+}
