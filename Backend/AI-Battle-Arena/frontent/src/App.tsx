@@ -8,7 +8,7 @@ import EmptyState from './components/EmptyState';
 import type { BattleResponse, BattleStatus } from './types';
 import './App.css';
 
-const API_URL = 'http://localhost:3001/battle';
+const API_URL = '/api/battle';
 
 const App: React.FC = () => {
   const [status, setStatus] = useState<BattleStatus>('idle');
