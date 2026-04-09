@@ -1,33 +1,35 @@
-import React, { useState } from 'react';
-import Header from './components/Header';
-import InputPanel from './components/InputPanel';
-import SolutionCard from './components/SolutionCard';
-import JudgePanel from './components/JudgePanel';
-import SkeletonLoader from './components/SkeletonLoader';
-import EmptyState from './components/EmptyState';
-import type { BattleResponse, BattleStatus } from './types';
-import './App.css';
+import React, { useState } from "react";
+import Header from "./components/Header";
+import InputPanel from "./components/InputPanel";
+import SolutionCard from "./components/SolutionCard";
+import JudgePanel from "./components/JudgePanel";
+import SkeletonLoader from "./components/SkeletonLoader";
+import EmptyState from "./components/EmptyState";
+import type { BattleResponse, BattleStatus } from "./types";
+import "./App.css";
 
-const API_URL = '/api/battle';
+const API_URL = "/api/battle";
 
 const App: React.FC = () => {
-  const [status, setStatus] = useState<BattleStatus>('idle');
+  const [status, setStatus] = useState<BattleStatus>("idle");
   const [result, setResult] = useState<BattleResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const winner = result
-    ? result.judge.solution_1_score >= result.judge.solution_2_score ? 1 : 2
+    ? result.judge.solution_1_score >= result.judge.solution_2_score
+      ? 1
+      : 2
     : null;
 
   const handleSubmit = async (problem: string) => {
-    setStatus('loading');
+    setStatus("loading");
     setError(null);
     setResult(null);
 
     try {
       const res = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ problem }),
       });
 
@@ -37,11 +39,12 @@ const App: React.FC = () => {
 
       const data: BattleResponse = await res.json();
       setResult(data);
-      setStatus('success');
+      setStatus("success");
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Unknown error occurred';
+      const message =
+        err instanceof Error ? err.message : "Unknown error occurred";
       setError(message);
-      setStatus('error');
+      setStatus("error");
     }
   };
 
@@ -51,15 +54,19 @@ const App: React.FC = () => {
 
       <div className="app-layout">
         {/* Left: Input panel */}
-        <InputPanel onSubmit={handleSubmit} isLoading={status === 'loading'} />
+        <InputPanel
+          onSubmit={handleSubmit}
+          isLoading={status === "loading"}
+          isResponseReady={status === "success"}
+        />
 
         {/* Right: Main content */}
         <main className="main-content">
           {/* Loading */}
-          {status === 'loading' && <SkeletonLoader />}
+          {status === "loading" && <SkeletonLoader />}
 
           {/* Error */}
-          {status === 'error' && error && (
+          {status === "error" && error && (
             <div className="error-state animate-fade-in">
               <div className="error-icon">⚠️</div>
               <div className="error-body">
@@ -67,7 +74,10 @@ const App: React.FC = () => {
                 <p className="error-message">{error}</p>
                 <button
                   className="error-retry"
-                  onClick={() => { setStatus('idle'); setError(null); }}
+                  onClick={() => {
+                    setStatus("idle");
+                    setError(null);
+                  }}
                   id="retry-btn"
                 >
                   Try Again
@@ -77,13 +87,23 @@ const App: React.FC = () => {
           )}
 
           {/* Success results */}
-          {status === 'success' && result && (
+          {status === "success" && result && (
             <div className="results-container">
               {/* Problem card */}
-              <div className="problem-card glass-card animate-fade-in-up" id="problem-card">
+              <div
+                className="problem-card glass-card animate-fade-in-up"
+                id="problem-card"
+              >
                 <div className="problem-header">
                   <div className="problem-label">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
                       <polyline points="16 18 22 12 16 6" />
                       <polyline points="8 6 2 12 8 18" />
                     </svg>
@@ -131,7 +151,7 @@ const App: React.FC = () => {
           )}
 
           {/* Empty */}
-          {status === 'idle' && <EmptyState />}
+          {status === "idle" && <EmptyState />}
         </main>
       </div>
     </div>

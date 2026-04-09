@@ -118,7 +118,9 @@
 }
 
 @keyframes grow-bar {
-  from { width: 0 !important; }
+  from {
+    width: 0 !important;
+  }
 }
 
 .score-bar-winner {
@@ -205,12 +207,20 @@
   padding: 20px 24px;
   overflow: hidden;
   border: 1px solid rgba(245, 158, 11, 0.2);
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.05), rgba(245, 158, 11, 0.02));
+  background: linear-gradient(
+    135deg,
+    rgba(245, 158, 11, 0.05),
+    rgba(245, 158, 11, 0.02)
+  );
 }
 
 .verdict-card.draw {
   border-color: rgba(139, 92, 246, 0.2);
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.05), rgba(139, 92, 246, 0.02));
+  background: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 0.05),
+    rgba(139, 92, 246, 0.02)
+  );
 }
 
 .verdict-glow {
@@ -289,11 +299,80 @@
   line-height: 1;
 }
 
-.vs-score.blue { color: var(--accent-blue); }
-.vs-score.green { color: var(--accent-green); }
+.vs-score.blue {
+  color: var(--accent-blue);
+}
+.vs-score.green {
+  color: var(--accent-green);
+}
 
 .vs-separator {
   font-size: 24px;
   font-weight: 800;
   color: var(--text-muted);
+}
+
+@media (max-width: 1024px) {
+  .judge-header {
+    padding: 16px;
+  }
+
+  .judge-body {
+    padding: 16px;
+    gap: 16px;
+  }
+
+  .scores-section {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .vs-divider {
+    order: 2;
+  }
+
+  .reasoning-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .judge-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .judge-meta {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .score-bar-value {
+    font-size: 19px;
+  }
+
+  .verdict-card {
+    padding: 16px;
+  }
+
+  .verdict-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .verdict-main {
+    font-size: 15px;
+  }
+
+  .verdict-scores {
+    gap: 8px;
+    padding-top: 10px;
+  }
+
+  .vs-score {
+    font-size: 24px;
+  }
 }

@@ -81,7 +81,12 @@
 .battle-divider {
   flex: 1;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(245, 158, 11, 0.3), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(245, 158, 11, 0.3),
+    transparent
+  );
 }
 
 .battle-label {
@@ -144,10 +149,10 @@
   color: var(--text-secondary);
   line-height: 1.6;
   font-family: var(--font-mono);
-  background: rgba(0,0,0,0.2);
+  background: rgba(0, 0, 0, 0.2);
   padding: 8px 12px;
   border-radius: 6px;
-  border: 1px solid rgba(239,68,68,0.1);
+  border: 1px solid rgba(239, 68, 68, 0.1);
 }
 
 .error-retry {
@@ -172,4 +177,60 @@
 /* Remove default App.css leftovers */
 .App {
   text-align: center;
+}
+
+@media (max-width: 1024px) {
+  .app-layout {
+    flex-direction: column;
+    overflow: visible;
+  }
+
+  .main-content {
+    padding: 20px 18px 28px;
+    overflow: visible;
+  }
+
+  .results-container {
+    gap: 16px;
+  }
+
+  .solutions-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .error-state {
+    max-width: 100%;
+    margin: 24px 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .main-content {
+    padding: 16px 12px 22px;
+  }
+
+  .problem-header {
+    gap: 8px;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .problem-text {
+    padding: 14px;
+    font-size: 14px;
+  }
+
+  .battle-header {
+    gap: 8px;
+  }
+
+  .battle-label {
+    font-size: 11px;
+    letter-spacing: 1.1px;
+  }
+
+  .error-state {
+    gap: 12px;
+    padding: 16px;
+  }
 }

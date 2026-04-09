@@ -14,6 +14,13 @@
   overflow-y: auto;
 }
 
+.input-panel.response-ready {
+  height: auto;
+  position: relative;
+  top: 0;
+  overflow: visible;
+}
+
 /* Panel Header */
 .panel-header {
   display: flex;
@@ -95,7 +102,9 @@
   border-radius: var(--radius-md);
   border: 1px solid var(--border-card);
   background: rgba(5, 7, 12, 0.6);
-  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
 }
 
 .textarea-container:focus-within {
@@ -223,7 +232,12 @@ kbd {
 .btn-shimmer {
   position: absolute;
   inset: 0;
-  background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%);
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.15) 50%,
+    transparent 60%
+  );
   background-size: 200% 100%;
   animation: shimmer 2s infinite;
 }
@@ -289,13 +303,17 @@ kbd {
 
 .panel-divider::before,
 .panel-divider::after {
-  content: '';
+  content: "";
   flex: 1;
   height: 1px;
   background: var(--border-subtle);
 }
 
 /* Examples */
+.quick-examples.has-submitted {
+  display: none;
+}
+
 .examples-list {
   display: flex;
   flex-direction: column;
@@ -380,4 +398,63 @@ kbd {
 .panel-tip svg {
   flex-shrink: 0;
   margin-top: 1px;
+}
+
+@media (max-width: 1024px) {
+  .input-panel {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    height: auto;
+    position: relative;
+    top: 0;
+    border-right: none;
+    border-bottom: 1px solid var(--border-subtle);
+    padding: 18px 16px;
+  }
+
+  .panel-tip {
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .input-panel {
+    padding: 14px 12px;
+    gap: 14px;
+  }
+
+  .quick-examples.has-input {
+    display: none;
+  }
+
+  .panel-title {
+    font-size: 14px;
+  }
+
+  .panel-subtitle {
+    padding-left: 34px;
+    font-size: 11px;
+  }
+
+  .problem-textarea {
+    min-height: 140px;
+    max-height: 220px;
+    padding: 12px;
+  }
+
+  .textarea-footer {
+    padding: 7px 10px;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .submit-btn {
+    padding: 12px;
+    font-size: 13px;
+  }
+
+  .example-btn {
+    padding: 9px 10px;
+  }
 }

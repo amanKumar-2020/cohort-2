@@ -90,8 +90,12 @@
   gap: 6px;
 }
 
-.fighter-left { left: 0; }
-.fighter-right { right: 0; }
+.fighter-left {
+  left: 0;
+}
+.fighter-right {
+  right: 0;
+}
 
 .fighter-avatar {
   width: 50px;
@@ -190,4 +194,66 @@
   font-size: 11.5px;
   color: var(--text-muted);
   margin-top: 2px;
+}
+
+@media (max-width: 1024px) {
+  .empty-state {
+    min-height: auto;
+    gap: 28px;
+    padding: 30px 16px;
+  }
+
+  .orb-1,
+  .orb-2 {
+    width: 280px;
+    height: 280px;
+  }
+}
+
+@media (max-width: 640px) {
+  .empty-state {
+    gap: 22px;
+    padding: 24px 10px;
+  }
+
+  .empty-arena {
+    width: 100%;
+    max-width: 260px;
+    height: 130px;
+  }
+
+  .arena-ring {
+    width: 86px;
+    height: 86px;
+  }
+
+  .arena-inner {
+    width: 60px;
+    height: 60px;
+  }
+
+  .fighter-avatar {
+    width: 44px;
+    height: 44px;
+  }
+
+  .empty-title {
+    font-size: 22px;
+  }
+
+  .empty-description {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .empty-features {
+    gap: 8px;
+  }
+
+  .feature-chip {
+    width: 100%;
+    max-width: 360px;
+    justify-content: flex-start;
+    padding: 10px 12px;
+  }
 }

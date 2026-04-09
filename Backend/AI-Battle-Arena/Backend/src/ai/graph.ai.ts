@@ -7,7 +7,7 @@ import {
 } from "@langchain/langgraph";
 import { geminiModel, mistralAIModel, groqModel } from "./model.ai";
 import { z } from "zod";
-import { createAgent, providerStrategy } from "langchain";
+import { createAgent, providerStrategy, toolStrategy } from "langchain";
 
 const State = new StateSchema({
   problem: z.string().default(""),
@@ -56,8 +56,8 @@ const judgeNode: GraphNode<typeof State> = async (state) => {
   const { problem, solution_1, solution_2 } = state;
 
   const judgeAgent = createAgent({
-    model: geminiModel,
-    responseFormat: providerStrategy(
+    model: mistralAIModel,
+    responseFormat: toolStrategy(
       z.object({
         solution_1_score: z.number().min(0).max(100),
         solution_2_score: z.number().min(0).max(100),

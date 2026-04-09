@@ -18,3 +18,7 @@ export const groqModel = new ChatGroq({
 });
 
 
+// export const geminiModel = new ChatMistralAI({
+//   model: "mistral-medium-latest",
+//   apiKey: process.env.MISTRAL_API_KEY,
+// });
