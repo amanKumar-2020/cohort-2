@@ -1,14 +1,8 @@
 
-import './App.css'
+import Register from '../features/auth/pages/Register';
 
 function App() {
-
-
-  return (
-    <>
-   APP
-    </>
-  )
+  return <Register />;
 }
 
-export default App
+export default App;
