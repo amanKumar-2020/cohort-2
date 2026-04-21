@@ -3,17 +3,15 @@ import jwt from "jsonwebtoken";
 import config from "../config/config.js";
 
 async function sentTokenResponse(user, res, message) {
-  const token = jwt.sign(
-    { id: User.id }, 
-    config.JWT_SECRET_KEY, 
-    {expiresIn: "3d",}
-)
-res.cookie("token",token)
-res.status(201).json({
-    message:message,
-    success:true,
-    user
-})
+  const token = jwt.sign({ id: User.id }, config.JWT_SECRET_KEY, {
+    expiresIn: "3d",
+  });
+  res.cookie("token", token);
+  res.status(201).json({
+    message: message,
+    success: true,
+    user,
+  });
 }
 
 const registerController = async (req, res) => {
@@ -45,9 +43,29 @@ const registerController = async (req, res) => {
   }
 };
 
-const loginController = (req, res) => {
-  // Handle login logic here
-  res.send("Login endpoint");
+const loginController = async (req, res) => {
+  const { email, contact, password } = req.body;
+
+  try {
+    const user = await User.findOne({
+      $or: [{ email }, { contact }],
+    });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
+
+    await sentTokenResponse(user, res, "Login successful");
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ message: "Server error", error: error.message });
+  }
 };
 
 export { registerController, loginController };
