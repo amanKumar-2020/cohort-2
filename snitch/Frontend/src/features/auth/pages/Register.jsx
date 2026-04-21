@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "../hook/useAuth";
+import { useNavigate } from "react-router";
 import "./register.theme.css";
 import "./Register.css";
 
@@ -76,6 +77,7 @@ const LockIcon = () => (
 
 export default function Register() {
   const { handleRegister } = useAuth();
+  const navigate = useNavigate();
 
   const [form, setForm] = useState({
     fullName: "",
@@ -111,6 +113,7 @@ export default function Register() {
       );
     } finally {
       setLoading(false);
+      navigate("/");
     }
   }
 

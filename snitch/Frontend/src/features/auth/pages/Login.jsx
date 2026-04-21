@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "../hook/useAuth";
+import { useNavigate } from "react-router";
 import "./register.theme.css";
 import "./Login.css";
 
@@ -49,6 +50,7 @@ const LockIcon = () => (
 );
 
 export default function Login() {
+  const navigate = useNavigate();
   const { handleLogin } = useAuth();
 
   const [form, setForm] = useState({
@@ -82,6 +84,7 @@ export default function Login() {
       );
     } finally {
       setLoading(false);
+        navigate("/");
     }
   }
 

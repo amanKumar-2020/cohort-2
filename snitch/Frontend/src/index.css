@@ -1,4 +1,5 @@
 /* Global reset & base styles */
+@import "tailwindcss";
 *,
 *::before,
 *::after {
