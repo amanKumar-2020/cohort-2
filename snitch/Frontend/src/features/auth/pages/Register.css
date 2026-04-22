@@ -72,6 +72,20 @@
   grid-column: 1 / -1;
 }
 
+.register-actions {
+  width: 68%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-md);
+  margin-top: var(--space-md);
+}
+/* 📱 Mobile View */
+@media (max-width: 768px) {
+  .register-actions {
+    width: 100%;
+    grid-template-columns: 1fr; /* stack items */
+  }
+}
 /* ── Input groups ── */
 .input-group {
   display: flex;
@@ -181,7 +195,7 @@
   background-color: var(--surface-container-high);
   border: 1.5px solid rgba(245, 197, 24, 0.3);
   border-radius: var(--radius-md);
-  transition: 
+  transition:
     border-color var(--duration-fast) var(--ease-smooth),
     background-color var(--duration-fast) var(--ease-smooth);
 }
@@ -275,8 +289,10 @@
 /* ── Submit button ── */
 .register-btn {
   width: 100%;
+  max-width: 280px;
+  height: 40px;
   padding: 1rem;
-  margin-top: var(--space-sm);
+  margin-top: 0;
   background: linear-gradient(
     135deg,
     var(--primary) 0%,
@@ -290,10 +306,14 @@
   border: none;
   border-radius: var(--radius-md);
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition:
     transform var(--duration-fast) var(--ease-smooth),
     box-shadow var(--duration-normal) var(--ease-smooth),
     opacity var(--duration-fast) var(--ease-smooth);
+  justify-self: center;
 }
 
 .register-btn:hover {
@@ -311,6 +331,24 @@
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
+}
+
+.google-btn-container {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0;
+}
+
+.google-btn-container a {
+  display: block;
+  width: 100%;
+  max-width: 280px;
+}
+
+.google-btn-container .google-btn {
+  width: 100%;
+  margin: 0;
 }
 
 /* ── Loading spinner inside button ── */
@@ -405,6 +443,25 @@
   .register-form {
     grid-template-columns: 1fr;
     gap: var(--space-lg);
+  }
+
+  .register-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .register-btn {
+    width: 100%;
+    max-width: none;
+    justify-self: stretch;
+  }
+
+  .google-btn-container {
+    justify-content: stretch;
+  }
+
+  .google-btn-container a {
+    width: 100%;
+    max-width: none;
   }
 
   .full-width {

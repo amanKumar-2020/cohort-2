@@ -1,8 +1,17 @@
-import { Router } from "express"; 
-import { validateLogin, validateRegister } from "../validator/auth.validator.js";
-import { loginController, registerController ,googleCallback } from "../controllers/auth.controller.js";
-const router = Router();
+import { Router } from "express";
+import {
+  validateLogin,
+  validateRegister,
+} from "../validator/auth.validator.js";
+import {
+  loginController,
+  registerController,
+  googleCallback,
+} from "../controllers/auth.controller.js";
+import passport from "passport";
+import config from "../config/config.js";
 
+const router = Router();
 
 router.post("/register", validateRegister, registerController);
 
@@ -18,10 +27,7 @@ router.get(
   "/google/callback",
   passport.authenticate("google", {
     session: false,
-    failureRedirect:
-      config.NODE_ENV == "development"
-        ? "http://localhost:5173/login"
-        : "/login",
+    failureRedirect: `${config.FRONTEND_URL}/login`,
   }),
   googleCallback,
 );

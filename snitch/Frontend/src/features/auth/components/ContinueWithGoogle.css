@@ -1,0 +1,60 @@
+/* google-btn.css */
+
+.google-btn {
+  /* Flexbox for perfect alignment */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  /* Dimensions and Spacing */
+  width: 100%;
+  height: 40px;
+  padding: 1rem;
+  margin:  0.7rem 0rem;
+  /* Typography */
+  font-family: 'Roboto', 'Segoe UI', Tahoma, sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.25px;
+  
+  /* Colors and Borders */
+  background-color: #ffffff;
+  color: #3c4043;
+  border: 1px solid #dadce0;
+  border-radius: 4px;
+  
+  /* Interaction */
+  cursor: pointer;
+  /* transition: background-color 0.2s ease, box-shadow 0.2s ease; */
+   transition:
+    transform var(--duration-fast) var(--ease-smooth),
+    box-shadow var(--duration-normal) var(--ease-smooth),
+    opacity var(--duration-fast) var(--ease-smooth);
+}
+
+/* Hover effect adds a subtle shadow and slight background change */
+.google-btn:hover {
+     box-shadow: 0 8px 32px rgba(240, 193, 16, 0.18);
+  transform: translateY(-1px);
+  background-color: #f8f9fa;
+  box-shadow: 0 1px 3px rgba(60, 64, 67, 0.3);
+}
+
+/* Active state (when clicked) */
+.google-btn:active {
+  background-color: #e8eaed;
+}
+
+/* Wrapper to keep the icon spaced nicely from the text */
+.google-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+}
+
+/* Standard sizing for the Google 'G' */
+.google-icon {
+  width: 18px;
+  height: 18px;
+}

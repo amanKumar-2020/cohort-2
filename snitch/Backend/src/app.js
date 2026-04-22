@@ -2,10 +2,10 @@ import express from "express";
 import connectToDB from "./config/database.js";
 import authRoutes from "./routes/auth.routes.js";
 import morgan from "morgan";
-const passport = require("passport");
+import passport from "passport";
 // const jwt = require("jsonwebtoken");
 import config from "./config/config.js";
-import { Strategy as GoogleStrategy } from ("passport-google-oauth20");
+import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import cors from "cors";
 
 const app = express();

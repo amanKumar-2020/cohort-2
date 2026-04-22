@@ -71,7 +71,6 @@ const loginController = async (req, res) => {
 const googleCallback = async (req, res) => {
   const { id, displayName, emails } = req.user;
   const email = emails[0].value;
-  const profilePic = photos[0].value;
 
   let user = await User.findOne({ email });
   if (!user) {
@@ -84,6 +83,6 @@ const googleCallback = async (req, res) => {
     await user.save();
   }
   await sentTokenResponse(user, res, "Google login successful");
-  res.redirect("http://localhost:5173/");
+  res.redirect(config.FRONTEND_URL);
 };
 export { registerController, loginController, googleCallback };

@@ -3,6 +3,7 @@ import { useAuth } from "../hook/useAuth";
 import { useNavigate } from "react-router";
 import "./register.theme.css";
 import "./Login.css";
+import ContinueWithGoogle from "../components/ContinueWithGoogle";
 
 /* ── Inline SVG icons (no external deps) ── */
 const EyeIcon = () => (
@@ -164,11 +165,16 @@ export default function Login() {
           </div>
 
           {/* Submit */}
-          <button type="submit" className="login-btn full-width" disabled={loading}>
+          <button
+            type="submit"
+            className="login-btn full-width"
+            disabled={loading}
+          >
             {loading && <span className="login-btn__spinner" />}
             {loading ? "Signing In…" : "Sign In"}
           </button>
         </form>
+        <ContinueWithGoogle />
 
         {/* ── Footer ── */}
         <p className="login-footer">
