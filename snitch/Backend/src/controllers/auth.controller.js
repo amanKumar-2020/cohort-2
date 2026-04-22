@@ -68,4 +68,22 @@ const loginController = async (req, res) => {
   }
 };
 
-export { registerController, loginController };
+const googleCallback = async (req, res) => {
+  const { id, displayName, emails } = req.user;
+  const email = emails[0].value;
+  const profilePic = photos[0].value;
+
+  let user = await User.findOne({ email });
+  if (!user) {
+    user = new User({
+      fullName: displayName,
+      email,
+      password: id, // You can use the Google ID as a password or generate a random one
+      role: "buyer", // Default role for Google users
+    });
+    await user.save();
+  }
+  await sentTokenResponse(user, res, "Google login successful");
+  res.redirect("http://localhost:5173/");
+};
+export { registerController, loginController, googleCallback };
