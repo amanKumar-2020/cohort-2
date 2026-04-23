@@ -77,12 +77,18 @@ const googleCallback = async (req, res) => {
     user = new User({
       fullName: displayName,
       email,
-      password: id, // You can use the Google ID as a password or generate a random one
-      role: "buyer", // Default role for Google users
+      googleId: id,
     });
     await user.save();
   }
-  await sentTokenResponse(user, res, "Google login successful");
-  res.redirect(config.FRONTEND_URL);
+  
+  const token = jwt.sign(
+    { id: user.id }, 
+    config.JWT_SECRET_KEY,
+     {expiresIn: "3d", }
+    );
+  res.cookie("token", token);
+  res.redirect(`${config.FRONTEND_URL}`);
 };
+
 export { registerController, loginController, googleCallback };
