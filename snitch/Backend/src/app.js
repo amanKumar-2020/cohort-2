@@ -1,8 +1,10 @@
 import express from "express";
 import connectToDB from "./config/database.js";
 import authRoutes from "./routes/auth.routes.js";
+import productRoutes from "./routes/product.routes.js";
 import morgan from "morgan";
 import passport from "passport";
+import cookieParser from "cookie-parser"
 // const jwt = require("jsonwebtoken");
 import config from "./config/config.js";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
@@ -11,8 +13,8 @@ import cors from "cors";
 const app = express();
 
 // Middleware
-app.use(morgan("dev"));
-app.use(express.json());
+app.use(express.json())
+app.use(cookieParser());
 app.use(passport.initialize());
 app.use(
   cors({
@@ -36,10 +38,12 @@ passport.use( new GoogleStrategy({
 }))
 
 app.use("/api/auth", authRoutes);
+app.use("/api/products", productRoutes);
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
 // Connect to Database
 connectToDB();
+app.use(morgan("dev"));
 export default app;

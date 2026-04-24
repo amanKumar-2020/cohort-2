@@ -42,6 +42,32 @@ if (!process.env.GOOGLE_CLIENT_SECRET) {
   process.exit(1); // Exit the process with an error code
 }
 
+// ImageKit configuration checks
+if (!process.env.IMAGEKIT_PUBLIC_KEY) {
+  console.error(
+    "Error: IMAGEKIT_PUBLIC_KEY is not defined in the environment variables.",
+  );
+  process.exit(1); // Exit the process with an error code
+}
+if (!process.env.IMAGEKIT_PRIVATE_KEY) {
+  console.error(
+    "Error: IMAGEKIT_PRIVATE_KEY is not defined in the environment variables.",
+  );
+  process.exit(1); // Exit the process with an error code
+}
+if (!process.env.IMAGEKIT_URL_ENDPOINT) {
+  console.error(
+    "Error: IMAGEKIT_URL_ENDPOINT is not defined in the environment variables.",
+  );
+  process.exit(1); // Exit the process with an error code
+}
+if (!process.env.IMAGEKIT_ID) {
+  console.error(
+    "Error: IMAGEKIT_ID is not defined in the environment variables.",
+  );
+  process.exit(1); // Exit the process with an error code
+} 
+
 const config = {
   PORT: process.env.PORT || 3000,
   NODE_ENV: process.env.NODE_ENV || "development",
@@ -52,6 +78,12 @@ const config = {
   REDIS_URL: process.env.REDIS_URL,
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+  imagekit: {
+    publicKey: process.env.IMAGEKIT_PUBLIC_KEY,
+    privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
+    urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT,
+    id: process.env.IMAGEKIT_ID,
+  },
 };
 
 export default config;

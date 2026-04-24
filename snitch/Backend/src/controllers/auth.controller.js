@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import config from "../config/config.js";
 
 async function sentTokenResponse(user, res, message) {
-  const token = jwt.sign({ id: User.id }, config.JWT_SECRET_KEY, {
+  const token = jwt.sign({ id: user._id }, config.JWT_SECRET_KEY, {
     expiresIn: "3d",
   });
   res.cookie("token", token);
@@ -81,12 +81,10 @@ const googleCallback = async (req, res) => {
     });
     await user.save();
   }
-  
-  const token = jwt.sign(
-    { id: user.id }, 
-    config.JWT_SECRET_KEY,
-     {expiresIn: "3d", }
-    );
+
+  const token = jwt.sign({ id: user._id }, config.JWT_SECRET_KEY, {
+    expiresIn: "3d",
+  });
   res.cookie("token", token);
   res.redirect(`${config.FRONTEND_URL}`);
 };
