@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import priceSchema from "./price.model.js";
 
 const productSchema = new mongoose.Schema(
   {
@@ -15,15 +16,6 @@ const productSchema = new mongoose.Schema(
       default: "Generic",
       trim: true,
     },
-    price: {
-      type: Number,
-      required: true,
-      min: 0,
-    },
-    originalPrice: {
-      type: Number,
-      min: 0,
-    },
     category: {
       type: String,
       required: true,
@@ -39,6 +31,7 @@ const productSchema = new mongoose.Schema(
     },
     variants: [
       {
+        _id: { type: mongoose.Schema.Types.ObjectId, auto: true },
         size: { type: String, required: true },
         color: { type: String, required: true },
         stock: { type: Number, default: 0, min: 0 },
@@ -59,6 +52,10 @@ const productSchema = new mongoose.Schema(
       type: Map,
       of: String,
     },
+    price: {
+      type: priceSchema,
+      required: true,
+    },
     sellerId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -70,6 +67,6 @@ const productSchema = new mongoose.Schema(
   },
 );
 
-const Product = mongoose.model("Product", productSchema);
+const ProductModel = mongoose.model("Product", productSchema);
 
-export default Product;
+export default ProductModel;

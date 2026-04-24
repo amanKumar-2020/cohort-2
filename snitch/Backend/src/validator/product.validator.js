@@ -1,123 +1,129 @@
 import { body, validationResult } from "express-validator";
+const PRODUCT_CATEGORIES = ["men", "women", "kids"];
+const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 function validateRequests(req, res, next) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
-  return next();
+  next();
 }
 
 export const validateProductData = [
+  // ✅ NAME
   body("name")
     .trim()
     .notEmpty()
     .withMessage("Product name is required")
     .isLength({ max: 120 })
-    .withMessage("Product name must not exceed 120 characters"),
+    .withMessage("Max 120 characters allowed"),
 
+  // ✅ DESCRIPTION
   body("description")
     .trim()
     .notEmpty()
     .withMessage("Product description is required"),
 
-  body("price")
+  // ✅ CATEGORY
+  body("category")
+    .trim()
+    .toLowerCase()
+    .isIn(PRODUCT_CATEGORIES)
+    .withMessage("Invalid category"),
+
+  // ✅ BRAND
+  body("brand").optional().isString().trim(),
+
+  // ✅ SUBCATEGORY
+  body("subCategory").optional().isString().trim(),
+
+  // ✅ SLUG
+  body("slug")
+    .trim()
+    .toLowerCase()
+    .matches(SLUG_PATTERN)
+    .withMessage("Invalid slug format"),
+
+  // ✅ PRICE FIELDS
+  body("amount")
     .notEmpty()
-    .withMessage("Price is required")
+    .withMessage("Price amount is required")
     .isFloat({ min: 0 })
-    .withMessage("Price must be a non-negative number")
+    .withMessage("Amount must be >= 0")
     .toFloat(),
 
-  body("originalPrice")
+  body("originalAmount")
     .optional()
     .isFloat({ min: 0 })
-    .withMessage("Original price must be a non-negative number")
+    .withMessage("Original amount must be >= 0")
     .toFloat(),
 
-  body("originalPrice")
+  body("currency")
     .optional()
+    .isIn(["INR", "USD", "EUR", "GBP", "JPY"])
+    .withMessage("Invalid currency"),
+
+  // ✅ VARIANTS (STRING → ARRAY)
+  body("variants")
+    .notEmpty()
+    .withMessage("Variants required")
     .custom((value, { req }) => {
-      if (value < req.body.price) {
-        throw new Error(
-          "Original price must be greater than or equal to price",
-        );
+      let parsed;
+
+      try {
+        parsed = JSON.parse(value);
+      } catch (err) {
+        throw new Error("Variants must be valid JSON");
       }
+
+      if (!Array.isArray(parsed) || parsed.length === 0) {
+        throw new Error("At least one variant is required");
+      }
+
+      // attach parsed to req for controller
+      req.body.parsedVariants = parsed;
+
       return true;
     }),
 
-  body("category")
-    .notEmpty()
-    .withMessage("Category is required")
-    .isIn(["men", "women", "kids"])
-    .withMessage("Category must be one of 'men', 'women', or 'kids'"),
+  // ✅ VARIANT STRUCTURE VALIDATION
+  body("variants").custom((_, { req }) => {
+    const variants = req.body.parsedVariants;
 
-  body("subCategory")
-    .optional()
-    .isString()
-    .withMessage("Subcategory must be a string")
-    .trim(),
+    for (const v of variants) {
+      if (!v.size || typeof v.size !== "string") {
+        throw new Error("Variant size is required");
+      }
 
-  body("brand")
-    .optional()
-    .isString()
-    .withMessage("Brand must be a string")
-    .trim(),
+      if (!v.color || typeof v.color !== "string") {
+        throw new Error("Variant color is required");
+      }
 
-  body("slug")
-    .trim()
-    .notEmpty()
-    .withMessage("Slug is required")
-    .matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
-    .withMessage("Slug must be lowercase and hyphen-separated"),
+      if (v.stock != null && (isNaN(v.stock) || v.stock < 0)) {
+        throw new Error("Variant stock must be >= 0");
+      }
+    }
 
-  body("sellerId")
-    .notEmpty()
-    .withMessage("Seller ID is required")
-    .isMongoId()
-    .withMessage("Seller ID must be a valid MongoDB ObjectId"),
+    return true;
+  }),
 
-  body("variants")
-    .isArray({ min: 1 })
-    .withMessage("At least one variant is required"),
-
-  body("variants.*.size")
-    .isString()
-    .withMessage("Variant size must be a string")
-    .trim()
-    .notEmpty()
-    .withMessage("Variant size is required"),
-
-  body("variants.*.color")
-    .optional()
-    .isString()
-    .withMessage("Variant color must be a string")
-    .trim()
-    .notEmpty()
-    .withMessage("Variant color is required"),
-
-  body("variants.*.stock")
-    .optional()
-    .isInt({ min: 0 })
-    .withMessage("Variant stock must be a non-negative integer")
-    .toInt(),
-
-  body("variants.*.images")
-    .optional()
-    .isArray()
-    .withMessage("Variant images must be an array"),
-
-  body("variants.*.images.*.url")
-    .optional()
-    .isString()
-    .withMessage("Image URL must be a string")
-    .trim()
-    .notEmpty()
-    .withMessage("Image URL cannot be empty"),
-
+  // ✅ ATTRIBUTES
   body("attributes")
     .optional()
-    .isObject()
-    .withMessage("Attributes must be an object"),
+    .custom((value) => {
+      if (typeof value !== "object" || Array.isArray(value)) {
+        throw new Error("Attributes must be an object");
+      }
+
+      for (const val of Object.values(value)) {
+        if (typeof val !== "string") {
+          throw new Error("Attribute values must be strings");
+        }
+      }
+
+      return true;
+    }),
 
   validateRequests,
 ];
