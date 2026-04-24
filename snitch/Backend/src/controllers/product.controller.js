@@ -11,7 +11,6 @@ export async function createProductController(req, res) {
       amount,
       originalAmount,
       currency,
-      slug
     } = req.body;
 
     const parsedVariants = JSON.parse(variants);
@@ -40,7 +39,6 @@ export async function createProductController(req, res) {
         currency,
       },
       sellerId: req.user._id,
-      slug,
     });
     res.status(201).json({
       message: "product created successful!",

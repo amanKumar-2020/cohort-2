@@ -1,6 +1,5 @@
 import { body, validationResult } from "express-validator";
 const PRODUCT_CATEGORIES = ["men", "women", "kids"];
-const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 function validateRequests(req, res, next) {
   const errors = validationResult(req);
@@ -38,12 +37,6 @@ export const validateProductData = [
   // ✅ SUBCATEGORY
   body("subCategory").optional().isString().trim(),
 
-  // ✅ SLUG
-  body("slug")
-    .trim()
-    .toLowerCase()
-    .matches(SLUG_PATTERN)
-    .withMessage("Invalid slug format"),
 
   // ✅ PRICE FIELDS
   body("amount")

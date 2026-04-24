@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import priceSchema from "./price.model.js";
+import slugify from "slugify";
 
 const productSchema = new mongoose.Schema(
   {
@@ -46,7 +47,6 @@ const productSchema = new mongoose.Schema(
       type: String,
       unique: true,
       index: true,
-      required: true,
     },
     attributes: {
       type: Map,
@@ -66,6 +66,26 @@ const productSchema = new mongoose.Schema(
     timestamps: true,
   },
 );
+
+productSchema.pre("save", async function () {
+  if (!this.isModified("name")) return;
+
+  let baseSlug = slugify(this.name, {
+    lower: true,
+    strict: true,
+    trim: true,
+  });
+
+  let slug = baseSlug;
+  let counter = 1;
+
+  while (await mongoose.models.Product.findOne({ slug })) {
+    slug = `${baseSlug}-${counter++}`;
+  }
+
+  this.slug = slug;
+
+});
 
 const ProductModel = mongoose.model("Product", productSchema);
 
