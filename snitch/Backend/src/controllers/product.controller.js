@@ -15,7 +15,7 @@ export async function createProductController(req, res) {
 
     const parsedVariants = JSON.parse(variants);
     const seller = req.user;
-    console.log(seller)
+    console.log(seller);
 
     const uploaded = await Promise.all(
       req.files.map((file) =>
@@ -48,5 +48,21 @@ export async function createProductController(req, res) {
   } catch (error) {
     console.error("Error creating product:", error);
     res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+export async function getSellerProduct(req, res) {
+  try {
+    const seller = req.user;
+    const products = await ProductModel.find({ sellerId: seller._id });
+    res.status(200).json({
+      message:"All product fetched from seller",
+      success:true,
+      products
+    })
+
+  } catch (error) {
+    console.log("Error at fetching Product:", error);
+    res.status(500).json({ message: "Internal server Error" });
   }
 }
