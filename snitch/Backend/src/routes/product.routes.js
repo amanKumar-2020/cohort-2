@@ -1,10 +1,17 @@
 import { Router } from "express";
-import { validateProductData } from "../validator/product.validator.js";
+import {
+  validateProductData,
+  validateSlug,
+} from "../validator/product.validator.js";
 import {
   createProductController,
   getSellerProduct,
+  getProduct,
 } from "../controllers/product.controller.js";
-import { authMiddlewareSeller } from "../middleware/auth.middleware.js";
+import {
+  authMiddlewareSeller,
+  authMiddlewareUser,
+} from "../middleware/auth.middleware.js";
 import multer from "multer";
 import upload from "../middleware/upload.middleware.js";
 // import config from "../config/config.js";
@@ -30,5 +37,12 @@ router.post(
  * @access private (seller)
  */
 router.get("/", authMiddlewareSeller, getSellerProduct);
+
+/**
+ * @route GET /api/products/:slug
+ * @des Get product by slug name
+ * @access public
+ */
+router.get("/:slug", validateSlug, getProduct);
 
 export default router;

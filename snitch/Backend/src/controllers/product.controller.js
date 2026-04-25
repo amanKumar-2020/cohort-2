@@ -54,15 +54,26 @@ export async function createProductController(req, res) {
 export async function getSellerProduct(req, res) {
   try {
     const seller = req.user;
-    const products = await ProductModel.find({ sellerId: seller._id });
+    const products = await ProductModel.find({ sellerId: seller._id }).sort({
+      createdAt: -1,
+    });
     res.status(200).json({
-      message:"All product fetched from seller",
-      success:true,
-      products
-    })
-
+      message: "All product fetched from seller",
+      success: true,
+      products,
+    });
   } catch (error) {
     console.log("Error at fetching Product:", error);
     res.status(500).json({ message: "Internal server Error" });
   }
+}
+
+export async function getProduct(req,res) {
+  const slug = req.params.slug;
+  const product = await ProductModel.findOne({slug});
+  res.status(200).json({
+    message:"Product fetched by slug",
+    success:true,
+    product
+  })
 }

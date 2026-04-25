@@ -1,4 +1,4 @@
-import { body, validationResult } from "express-validator";
+import { body, param, validationResult } from "express-validator";
 const PRODUCT_CATEGORIES = ["men", "women", "kids"];
 
 function validateRequests(req, res, next) {
@@ -36,7 +36,6 @@ export const validateProductData = [
 
   // ✅ SUBCATEGORY
   body("subCategory").optional().isString().trim(),
-
 
   // ✅ PRICE FIELDS
   body("amount")
@@ -117,6 +116,17 @@ export const validateProductData = [
 
       return true;
     }),
+
+  validateRequests,
+];
+
+export const validateSlug = [
+  param("slug")
+    .trim()
+    .notEmpty()
+    .withMessage("Product slug is required")
+    .matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
+    .withMessage("Invalid product slug format"),
 
   validateRequests,
 ];
