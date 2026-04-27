@@ -7,6 +7,7 @@ import {
   createProductController,
   getSellerProduct,
   getProduct,
+  addVariants,
 } from "../controllers/product.controller.js";
 import {
   authMiddlewareSeller,
@@ -44,5 +45,12 @@ router.get("/", authMiddlewareSeller, getSellerProduct);
  * @access public
  */
 router.get("/:slug", validateSlug, getProduct);
+
+/**
+ * @router PATCH /products/:productId/variants
+ * @des add new variants of products
+ * @access private (seller)
+ */
+router.patch("/:productId/variants", authMiddlewareSeller, addVariants);
 
 export default router;

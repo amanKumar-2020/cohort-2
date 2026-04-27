@@ -77,3 +77,7 @@ export async function getProduct(req,res) {
     product
   })
 }
+
+export async function addVariants(req,res) {
+  // i will write later and for variants i will update product model schema for better system design
+}
