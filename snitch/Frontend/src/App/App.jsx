@@ -4,13 +4,6 @@ import {RouterProvider} from "react-router"
 import { routes } from './app.routes';
 
 function App() {
-  // const path = window.location.pathname;
-
-  // if (path === '/login') {
-  //   return <Login />;
-  // }
-
-  // return <Register />;
   return <RouterProvider router={routes}/>;
 }
 

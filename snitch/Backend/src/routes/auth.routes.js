@@ -7,10 +7,11 @@ import {
   loginController,
   registerController,
   googleCallback,
+  getMe,
 } from "../controllers/auth.controller.js";
 import passport from "passport";
 import config from "../config/config.js";
-
+import {authMiddlewareUser} from "../middleware/auth.middleware.js"
 const router = Router();
 
 router.post("/register", validateRegister, registerController);
@@ -31,4 +32,12 @@ router.get(
   }),
   googleCallback,
 );
+
+/**
+ * @route GET /api/auth/me
+ * @description Get the authenticated user's profile
+ * @access Private
+ */
+router.get("/me", authMiddlewareUser, getMe);
+
 export default router;

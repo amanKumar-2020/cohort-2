@@ -89,4 +89,19 @@ const googleCallback = async (req, res) => {
   res.redirect(`${config.FRONTEND_URL}`);
 };
 
-export { registerController, loginController, googleCallback };
+const getMe = async (req,res)=> {
+  const user= req.user;
+  if(!user){
+    return res.status(401).json({
+      message:"user not found",
+      success: false
+    })
+  }
+  res.status(201).json({
+    message:"user fetched successful",
+    success:true,
+    user
+  })
+}
+
+export { registerController, loginController, googleCallback, getMe };
