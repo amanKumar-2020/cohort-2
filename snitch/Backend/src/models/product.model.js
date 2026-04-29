@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import priceSchema from "./price.model.js";
 import slugify from "slugify";
+import { nanoid } from "nanoid";
 
 const productSchema = new mongoose.Schema(
   {
@@ -21,24 +22,31 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: true,
       enum: ["men", "women", "kids"],
-      index: true,
       trim: true,
     },
     subCategory: {
       type: String,
-      index: true,
       default: "general",
       trim: true,
     },
     variants: [
       {
-        _id: { type: mongoose.Schema.Types.ObjectId, auto: true },
-        size: { type: String, required: true },
-        color: { type: String, required: true },
-        stock: { type: Number, default: 0, min: 0 },
+        color: {
+          type: String,
+          required: true,
+          lowercase: true,
+          trim: true,
+        },
+        colorSlug: { type: String },
         images: [
           {
             url: { type: String, required: true },
+          },
+        ],
+        sizes: [
+          {
+            size: { type: String, required: true, uppercase: true, trim: true },
+            stock: { type: Number, default: 0, min: 0 },
           },
         ],
       },
@@ -46,20 +54,25 @@ const productSchema = new mongoose.Schema(
     slug: {
       type: String,
       unique: true,
-      index: true,
     },
-    attributes: {
-      type: Map,
-      of: String,
-    },
+    attributes: [
+      {
+        key: String,
+        value: String,
+      },
+    ],
     price: {
       type: priceSchema,
       required: true,
     },
-    sellerId: {
+    seller: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
+    },
+    rating: {
+      average: { type: Number, default: 0, min: 0, max: 5 },
+      count: { type: Number, default: 0 },
     },
   },
   {
@@ -67,24 +80,52 @@ const productSchema = new mongoose.Schema(
   },
 );
 
-productSchema.pre("save", async function () {
-  if (!this.isModified("name")) return;
+productSchema.pre("save", function () {
+  if (this.isModified("name")) {
+    const baseSlug = slugify(this.name, {
+      lower: true,
+      strict: true,
+      trim: true,
+    });
 
-  let baseSlug = slugify(this.name, {
-    lower: true,
-    strict: true,
-    trim: true,
-  });
-
-  let slug = baseSlug;
-  let counter = 1;
-
-  while (await mongoose.models.Product.findOne({ slug })) {
-    slug = `${baseSlug}-${counter++}`;
+    this.slug = `${baseSlug}-${nanoid(6)}`;
   }
 
-  this.slug = slug;
+  //  Generate colorSlug for each variant
+  if (this.isModified("variants")) {
+    this.variants.forEach((variant) => {
+      if (variant.color) {
+        variant.colorSlug = slugify(`${this.name}-${variant.color}`, {
+          lower: true,
+          strict: true,
+        });
+      }
+    });
+  }
+});
+productSchema.path("variants").validate(function (variants) {
+  const colors = variants.map((v) => v.color.toLowerCase());
+  return new Set(colors).size === colors.length;
+}, "Duplicate colors not allowed");
 
+productSchema.index({ category: 1, subCategory: 1 });
+productSchema.index({ "variants.color": 1 });
+productSchema.index({ "price.amount": 1 });
+
+productSchema.pre("findOneAndUpdate", function () {
+  const update = this.getUpdate();
+
+  if (update.variants) {
+    update.variants = update.variants.map((variant) => {
+      if (variant.color) {
+        variant.colorSlug = slugify(`${update.name || ""}-${variant.color}`, {
+          lower: true,
+          strict: true,
+        })
+      }
+      return variant;
+    });
+  }
 });
 
 const ProductModel = mongoose.model("Product", productSchema);

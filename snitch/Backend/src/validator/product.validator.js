@@ -38,42 +38,50 @@ export const validateProductData = [
   body("subCategory").optional().isString().trim(),
 
   // ✅ PRICE FIELDS
-  body("amount")
-    .notEmpty()
+  body("price")
+    .exists()
     .withMessage("Price amount is required")
-    .isFloat({ min: 0 })
-    .withMessage("Amount must be >= 0")
-    .toFloat(),
+    .bail(),
 
-  body("originalAmount")
-    .optional()
-    .isFloat({ min: 0 })
-    .withMessage("Original amount must be >= 0")
-    .toFloat(),
+  // ✅ PRICE FIELDS
+  // body("price.amount"||"price")
+  //   .exists()
+  //   .withMessage("Price amount is required")
+  //   .bail()
+  //   .isFloat({ min: 0 })
+  //   .withMessage("Amount must be >= 0")
+  //   .toFloat(),
 
-  body("currency")
-    .optional()
-    .isIn(["INR", "USD", "EUR", "GBP", "JPY"])
-    .withMessage("Invalid currency"),
+  // body("price.originalAmount")
+  //   .optional()
+  //   .isFloat({ min: 0 })
+  //   .withMessage("Original amount must be >= 0")
+  //   .toFloat(),
+
+  // body("price.currency")
+  //   .optional()
+  //   .isIn(["INR", "USD", "EUR", "GBP", "JPY"])
+  //   .withMessage("Invalid currency"),
 
   // ✅ VARIANTS (STRING → ARRAY)
   body("variants")
     .notEmpty()
     .withMessage("Variants required")
     .custom((value, { req }) => {
-      let parsed;
+      let parsed = value;
 
-      try {
-        parsed = JSON.parse(value);
-      } catch (err) {
-        throw new Error("Variants must be valid JSON");
+      if (typeof value === "string") {
+        try {
+          parsed = JSON.parse(value);
+        } catch (err) {
+          throw new Error("Variants must be valid JSON");
+        }
       }
 
       if (!Array.isArray(parsed) || parsed.length === 0) {
         throw new Error("At least one variant is required");
       }
 
-      // attach parsed to req for controller
       req.body.parsedVariants = parsed;
 
       return true;
@@ -84,16 +92,32 @@ export const validateProductData = [
     const variants = req.body.parsedVariants;
 
     for (const v of variants) {
-      if (!v.size || typeof v.size !== "string") {
-        throw new Error("Variant size is required");
-      }
-
       if (!v.color || typeof v.color !== "string") {
         throw new Error("Variant color is required");
       }
 
-      if (v.stock != null && (isNaN(v.stock) || v.stock < 0)) {
-        throw new Error("Variant stock must be >= 0");
+      if (!Array.isArray(v.images) || v.images.length === 0) {
+        throw new Error("Variant images are required");
+      }
+
+      for (const img of v.images) {
+        if (!img || typeof img.url !== "string" || img.url.trim() === "") {
+          throw new Error("Variant image url is required");
+        }
+      }
+
+      if (!Array.isArray(v.sizes) || v.sizes.length === 0) {
+        throw new Error("Variant sizes are required");
+      }
+
+      for (const size of v.sizes) {
+        if (!size.size || typeof size.size !== "string") {
+          throw new Error("Variant size is required");
+        }
+
+        if (size.stock != null && (isNaN(size.stock) || size.stock < 0)) {
+          throw new Error("Variant stock must be >= 0");
+        }
       }
     }
 
@@ -104,13 +128,21 @@ export const validateProductData = [
   body("attributes")
     .optional()
     .custom((value) => {
-      if (typeof value !== "object" || Array.isArray(value)) {
-        throw new Error("Attributes must be an object");
+      if (!Array.isArray(value)) {
+        throw new Error("Attributes must be an array");
       }
 
-      for (const val of Object.values(value)) {
-        if (typeof val !== "string") {
-          throw new Error("Attribute values must be strings");
+      for (const attr of value) {
+        if (!attr || typeof attr.key !== "string" || attr.key.trim() === "") {
+          throw new Error("Attribute key is required");
+        }
+
+        if (
+          !attr ||
+          typeof attr.value !== "string" ||
+          attr.value.trim() === ""
+        ) {
+          throw new Error("Attribute value is required");
         }
       }
 

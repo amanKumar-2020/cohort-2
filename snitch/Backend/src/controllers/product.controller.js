@@ -6,14 +6,21 @@ export async function createProductController(req, res) {
     const {
       name,
       description,
-      category,
       variants,
-      amount,
-      originalAmount,
-      currency,
+      price,
+      category,
+      subCategory,
+      attributes,
     } = req.body;
 
-    const parsedVariants = JSON.parse(variants);
+    const priceData =
+      typeof req.body.price === "string"
+        ? JSON.parse(req.body.price)
+        : req.body.price;
+    // const {amount,originalAmount,currency} = price;
+    // const parsedVariants = JSON.parse(variants);
+    const variantsData = req.body.parsedVariants;
+
     const seller = req.user;
     console.log(seller);
 
@@ -25,20 +32,18 @@ export async function createProductController(req, res) {
         }),
       ),
     );
-    parsedVariants[0].images = uploaded.map((img) => ({
+    variantsData[0].images = uploaded.map((img) => ({
       url: img.url,
     }));
     const product = await ProductModel.create({
       name,
       description,
       category,
-      variants: parsedVariants,
-      price: {
-        amount,
-        originalAmount,
-        currency,
-      },
-      sellerId: req.user._id,
+      subCategory,
+      attributes,
+      variants: variantsData,
+      price: priceData,
+      seller: req.user._id,
     });
     res.status(201).json({
       message: "product created successful!",
