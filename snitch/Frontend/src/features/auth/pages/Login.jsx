@@ -78,14 +78,15 @@ export default function Login() {
 
     try {
       await handleLogin(form);
+      navigate("/");
     } catch (err) {
       setError(
         err?.response?.data?.message ||
           "Login failed. Please try again.",
+          navigate("/login")
       );
     } finally {
       setLoading(false);
-        navigate("/");
     }
   }
 
